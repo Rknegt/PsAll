@@ -33,12 +33,12 @@ class PsAll(plugins.PluginInterface):
                 description="Only show the user processes ",
                 default=False,
                 optional=True,
-            )
+            ),
         ]
 
     def _get_command_line_env(
-            self, task: interfaces.objects.ObjectInterface
-            ) -> Optional[dict]:
+        self, task: interfaces.objects.ObjectInterface
+    ) -> Optional[dict]:
         """Return the environment variables of a specific task as dictonary
 
         Arguments:
@@ -102,18 +102,32 @@ class PsAll(plugins.PluginInterface):
                     logname = ""
                     env_str = ""
 
-            yield (0, (f"{pid=}", f"{ppid=}", f"{logname=}", f"{name=}", f"\n{args=}", env_str))
+            yield (
+                0,
+                (
+                    f"{pid=}",
+                    f"{ppid=}",
+                    f"{logname=}",
+                    f"{name=}",
+                    f"\n{args=}",
+                    env_str,
+                ),
+            )
 
     def run(self):
         filterLogname = self.config.get("filterLogname")
 
         return renderers.TreeGrid(
-            [("PID", str), ("PPID", str), ("LOGNAME", str),
-             ("COMM", str), ("ARGS", str), ("ENV", str)],
+            [
+                ("PID", str),
+                ("PPID", str),
+                ("LOGNAME", str),
+                ("COMM", str),
+                ("ARGS", str),
+                ("ENV", str),
+            ],
             self._generator(
-                pslist.PsList.list_tasks(
-                    self.context, self.config["kernel"]
-                ),
-                userOnly=filterLogname
+                pslist.PsList.list_tasks(self.context, self.config["kernel"]),
+                userOnly=filterLogname,
             ),
         )
