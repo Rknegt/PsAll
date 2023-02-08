@@ -61,12 +61,12 @@ class PsAll(plugins.PluginInterface):
 
         decoded_env = env.decode().split("\x00")
 
-        # Todo: Make this for loop more readable
+        """ Cast the environment to a dictonary. """
         env = {}
         for env_var in decoded_env:
-            if env_var.find("=") != -1:
-                splitted_env = env_var.split("=")
-                env[splitted_env[0]] = "".join(splitted_env[1:])
+            if "=" in env_var:
+                key, value = env_var.split("=", 1)
+                env[key] = value
 
         return env
 
